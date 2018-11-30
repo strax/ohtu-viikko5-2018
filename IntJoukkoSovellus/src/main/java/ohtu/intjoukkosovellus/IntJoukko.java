@@ -1,6 +1,7 @@
 
 package ohtu.intjoukkosovellus;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class IntJoukko {
@@ -33,24 +34,19 @@ public class IntJoukko {
     }
 
     public boolean lisaa(int luku) {
-        if (nextFreeIndex == 0) {
-            elements[0] = luku;
-            nextFreeIndex++;
-            return true;
-        } else {
-        }
         if (!kuuluu(luku)) {
             elements[nextFreeIndex] = luku;
             nextFreeIndex++;
-            if (nextFreeIndex % elements.length == 0) {
-                int[] taulukkoOld = elements;
-                kopioiTaulukko(elements, taulukkoOld);
-                elements = new int[nextFreeIndex + capacityIncrease];
-                kopioiTaulukko(taulukkoOld, elements);
-            }
+            rebuild();
             return true;
         }
         return false;
+    }
+
+    private void rebuild() {
+        if (nextFreeIndex % elements.length == 0) {
+            elements = Arrays.copyOf(elements, elements.length + capacityIncrease);
+        }
     }
 
     public boolean kuuluu(int element) {
@@ -74,13 +70,6 @@ public class IntJoukko {
             nextFreeIndex--;
         });
         return index.isPresent();
-    }
-
-    private void kopioiTaulukko(int[] vanha, int[] uusi) {
-        for (int i = 0; i < vanha.length; i++) {
-            uusi[i] = vanha[i];
-        }
-
     }
 
     public int mahtavuus() {
