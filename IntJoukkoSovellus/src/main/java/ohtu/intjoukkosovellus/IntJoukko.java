@@ -24,19 +24,19 @@ public class IntJoukko {
 
     public IntJoukko(int initialCapacity, int capacityIncrease) {
         if (initialCapacity < 0) {
-            throw new IndexOutOfBoundsException("Virheellinen kapasiteetti");
+            throw new IndexOutOfBoundsException("intitialCapacity < 0");
         }
         if (capacityIncrease < 0) {
-            throw new IndexOutOfBoundsException("Virheellinen capacityIncrease");
+            throw new IndexOutOfBoundsException("capacityIncrease < 0");
         }
         elements = new int[initialCapacity];
         nextFreeIndex = 0;
         this.capacityIncrease = capacityIncrease;
     }
 
-    public boolean lisaa(int luku) {
-        if (!kuuluu(luku)) {
-            elements[nextFreeIndex] = luku;
+    public boolean lisaa(int element) {
+        if (!kuuluu(element)) {
+            elements[nextFreeIndex] = element;
             nextFreeIndex++;
             rebuild();
             return true;
@@ -54,9 +54,9 @@ public class IntJoukko {
         return findIndex(element).isPresent();
     }
 
-    private Optional<Integer> findIndex(int value) {
+    private Optional<Integer> findIndex(int element) {
         for (int i = 0; i < nextFreeIndex; i++) {
-            if (value == elements[i]) {
+            if (element == elements[i]) {
                 return Optional.of(i);
             }
         }
@@ -76,7 +76,6 @@ public class IntJoukko {
     public int mahtavuus() {
         return nextFreeIndex;
     }
-
 
     @Override
     public String toString() {
