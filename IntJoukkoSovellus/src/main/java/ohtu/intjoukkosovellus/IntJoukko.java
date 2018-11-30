@@ -2,7 +2,9 @@
 package ohtu.intjoukkosovellus;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class IntJoukko {
 
@@ -79,20 +81,9 @@ public class IntJoukko {
 
     @Override
     public String toString() {
-        if (nextFreeIndex == 0) {
-            return "{}";
-        } else if (nextFreeIndex == 1) {
-            return "{" + elements[0] + "}";
-        } else {
-            String tuotos = "{";
-            for (int i = 0; i < nextFreeIndex - 1; i++) {
-                tuotos += elements[i];
-                tuotos += ", ";
-            }
-            tuotos += elements[nextFreeIndex - 1];
-            tuotos += "}";
-            return tuotos;
-        }
+        var shownElements = Arrays.stream(elements).boxed().limit(mahtavuus()).map(Objects::toString).collect(Collectors.toList());
+
+        return "{" + String.join(", ", shownElements) + "}";
     }
 
     public int[] toIntArray() {
