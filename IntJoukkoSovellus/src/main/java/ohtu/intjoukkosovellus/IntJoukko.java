@@ -26,9 +26,6 @@ public class IntJoukko {
             throw new IndexOutOfBoundsException("Virheellinen kasvatuskoko");
         }
         arvot = new int[kapasiteetti];
-        for (int i = 0; i < arvot.length; i++) {
-            arvot[i] = 0;
-        }
         alkioidenLkm = 0;
         this.kasvatuskoko = kasvatuskoko;
     }
