@@ -117,14 +117,13 @@ public class IntJoukko {
     }
 
     public static IntJoukko erotus(IntJoukko a, IntJoukko b) {
-        IntJoukko z = new IntJoukko();
-        int[] aTaulu = a.toIntArray();
-        int[] bTaulu = b.toIntArray();
-        for (int i = 0; i < aTaulu.length; i++) {
-            z.lisaa(aTaulu[i]);
+        IntJoukko z = new IntJoukko(a.mahtavuus());
+
+        for (var element : a.toIntArray()) {
+            z.lisaa(element);
         }
-        for (int i = 0; i < bTaulu.length; i++) {
-            z.poista(i);
+        for (var element : b.toIntArray()) {
+            z.poista(element);
         }
 
         return z;
