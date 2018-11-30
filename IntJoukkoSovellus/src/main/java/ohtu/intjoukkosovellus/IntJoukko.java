@@ -41,8 +41,7 @@ public class IntJoukko {
             arvot[alkioidenLkm] = luku;
             alkioidenLkm++;
             if (alkioidenLkm % arvot.length == 0) {
-                int[] taulukkoOld = new int[arvot.length];
-                taulukkoOld = arvot;
+                int[] taulukkoOld = arvot;
                 kopioiTaulukko(arvot, taulukkoOld);
                 arvot = new int[alkioidenLkm + kasvatuskoko];
                 kopioiTaulukko(taulukkoOld, arvot);
