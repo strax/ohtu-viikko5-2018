@@ -54,12 +54,7 @@ public class IntJoukko {
     }
 
     public boolean kuuluu(int element) {
-        for (int i = 0; i < nextFreeIndex; i++) {
-            if (element == elements[i]) {
-                return true;
-            }
-        }
-        return false;
+        return findIndex(element).isPresent();
     }
 
     private Optional<Integer> findIndex(int value) {
