@@ -20,18 +20,26 @@ public class TennisGame {
         }
     }
 
-    private String getDrawState(int score) {
+    private String getScoreCall(int score) {
         switch (score) {
             case 0:
-                return "Love-All";
+                return "Love";
             case 1:
-                return "Fifteen-All";
+                return "Fifteen";
             case 2:
-                return "Thirty-All";
+                return "Thirty";
             case 3:
-                return "Forty-All";
+                return "Forty";
             default:
                 return "Deuce";
+        }
+    }
+
+    private String getDrawState(int score) {
+        if (score >= 4) {
+            return getScoreCall(score);
+        } else {
+            return String.format("%s-All", getScoreCall(score));
         }
     }
 
@@ -48,32 +56,7 @@ public class TennisGame {
     }
 
     private String getDefaultState(int a, int b) {
-        var tempScore = 0;
-        var score = "";
-        for (int i = 1; i < 3; i++) {
-            if (i == 1) {
-                tempScore = player1Score;
-            } else {
-                score += "-";
-                tempScore = player2Score;
-            }
-
-            switch(tempScore) {
-                case 0:
-                    score += "Love";
-                    break;
-                case 1:
-                    score += "Fifteen";
-                    break;
-                case 2:
-                    score += "Thirty";
-                    break;
-                case 3:
-                    score += "Forty";
-                    break;
-            }
-        }
-        return score;
+        return String.format("%s-%s", getScoreCall(a), getScoreCall(b));
     }
 
     public String getScore() {
