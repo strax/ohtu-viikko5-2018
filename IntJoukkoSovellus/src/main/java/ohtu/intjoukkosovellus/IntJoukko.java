@@ -22,7 +22,6 @@ public class IntJoukko {
         this(initialCapacity, DEFAULT_CAPACITY_INCREASE);
     }
 
-
     public IntJoukko(int initialCapacity, int capacityIncrease) {
         if (initialCapacity < 0) {
             throw new IndexOutOfBoundsException("Virheellinen kapasiteetti");
@@ -87,11 +86,7 @@ public class IntJoukko {
     }
 
     public int[] toIntArray() {
-        int[] taulu = new int[nextFreeIndex];
-        for (int i = 0; i < taulu.length; i++) {
-            taulu[i] = elements[i];
-        }
-        return taulu;
+        return Arrays.copyOfRange(elements, 0, nextFreeIndex);
     }
 
 

@@ -86,5 +86,11 @@ public class IntJoukkoTest {
     public void toStringToimiiTyhjallaJoukolla(){
         joukko = new IntJoukko();
         assertEquals("{}", joukko.toString());
-    }     
+    }
+
+    @Test
+    public void toIntArrayPalauttaaTyhjan(){
+        joukko = new IntJoukko();
+        assertArrayEquals(joukko.toIntArray(), new int[0]);
+    }
 }
