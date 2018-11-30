@@ -13,15 +13,15 @@ public class TennisGame {
     }
 
     public void wonPoint(String playerName) {
-        if (playerName == "player1")
-            player1Score += 1;
-        else
-            player2Score += 1;
+        if (playerName.equals(player1Name)) {
+            player1Score++;
+        } else {
+            player2Score++;
+        }
     }
 
     private String getDrawState(int score) {
-        switch (score)
-        {
+        switch (score) {
             case 0:
                 return "Love-All";
             case 1:
@@ -37,13 +37,13 @@ public class TennisGame {
 
     private String getAdvantageousState(int a, int b) {
         if (a - b == 1) {
-            return "Advantage player1";
+            return "Advantage " + player1Name;
         } else if (a - b == -1) {
-            return "Advantage player2";
-        } else if (a - b>= 2) {
-            return "Win for player1";
+            return "Advantage " + player2Name;
+        } else if (a - b >= 2) {
+            return "Win for " + player1Name;
         } else {
-            return "Win for player2";
+            return "Win for " + player2Name;
         }
     }
 
