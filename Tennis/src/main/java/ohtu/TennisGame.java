@@ -19,62 +19,70 @@ public class TennisGame {
             player2Score += 1;
     }
 
-    public String getScore() {
-        String score = "";
-        int tempScore=0;
-        if (player1Score == player2Score)
+    private String getDrawState(int score) {
+        switch (score)
         {
-            switch (player1Score)
-            {
+            case 0:
+                return "Love-All";
+            case 1:
+                return "Fifteen-All";
+            case 2:
+                return "Thirty-All";
+            case 3:
+                return "Forty-All";
+            default:
+                return "Deuce";
+        }
+    }
+
+    private String getAdvantageousState(int a, int b) {
+        if (a - b == 1) {
+            return "Advantage player1";
+        } else if (a - b == -1) {
+            return "Advantage player2";
+        } else if (a - b>= 2) {
+            return "Win for player1";
+        } else {
+            return "Win for player2";
+        }
+    }
+
+    private String getDefaultState(int a, int b) {
+        var tempScore = 0;
+        var score = "";
+        for (int i = 1; i < 3; i++) {
+            if (i == 1) {
+                tempScore = player1Score;
+            } else {
+                score += "-";
+                tempScore = player2Score;
+            }
+
+            switch(tempScore) {
                 case 0:
-                        score = "Love-All";
+                    score += "Love";
                     break;
                 case 1:
-                        score = "Fifteen-All";
+                    score += "Fifteen";
                     break;
                 case 2:
-                        score = "Thirty-All";
+                    score += "Thirty";
                     break;
                 case 3:
-                        score = "Forty-All";
+                    score += "Forty";
                     break;
-                default:
-                        score = "Deuce";
-                    break;
-                
-            }
-        }
-        else if (player1Score >=4 || player2Score >=4)
-        {
-            int minusResult = player1Score - player2Score;
-            if (minusResult==1) score ="Advantage player1";
-            else if (minusResult ==-1) score ="Advantage player2";
-            else if (minusResult>=2) score = "Win for player1";
-            else score ="Win for player2";
-        }
-        else
-        {
-            for (int i=1; i<3; i++)
-            {
-                if (i==1) tempScore = player1Score;
-                else { score+="-"; tempScore = player2Score;}
-                switch(tempScore)
-                {
-                    case 0:
-                        score+="Love";
-                        break;
-                    case 1:
-                        score+="Fifteen";
-                        break;
-                    case 2:
-                        score+="Thirty";
-                        break;
-                    case 3:
-                        score+="Forty";
-                        break;
-                }
             }
         }
         return score;
+    }
+
+    public String getScore() {
+        if (player1Score == player2Score) {
+            return getDrawState(player1Score);
+        } else if (player1Score >= 4 || player2Score >= 4) {
+            return getAdvantageousState(player1Score, player2Score);
+        } else {
+            return getDefaultState(player1Score, player2Score);
+        }
     }
 }
