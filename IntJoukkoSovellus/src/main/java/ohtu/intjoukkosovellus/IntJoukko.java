@@ -1,6 +1,8 @@
 
 package ohtu.intjoukkosovellus;
 
+import java.util.Arrays;
+
 public class IntJoukko {
 
     public final static int DEFAULT_INITIAL_CAPACITY = 5; // aloitustalukon koko
@@ -52,18 +54,12 @@ public class IntJoukko {
     }
 
     public boolean kuuluu(int luku) {
-
-        int on = 0;
         for (int i = 0; i < nextFreeIndex; i++) {
             if (luku == values[i]) {
-                on++;
+                return true;
             }
         }
-        if (on > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 
     public boolean poista(int luku) {
