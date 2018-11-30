@@ -1,14 +1,14 @@
 
 package ohtu.intjoukkosovellus;
 
-import java.util.Arrays;
+import java.util.Optional;
 
 public class IntJoukko {
 
     public final static int DEFAULT_INITIAL_CAPACITY = 5; // aloitustalukon koko
     public final static int DEFAULT_CAPACITY_INCREASE = 5;  // luotava uusi taulukko on näin paljon isompi kuin vanha
     private int capacityIncrease;      // Uusi taulukko on tämän verran vanhaa suurempi.
-    private int[] values;         // Joukon luvut säilytetään taulukon alkupäässä.
+    private int[] elements;         // Joukon luvut säilytetään taulukon alkupäässä.
     private int nextFreeIndex;  // Indeksi seuraavaan tyhjään paikkaan taulukossa
 
     public IntJoukko() {
@@ -27,63 +27,58 @@ public class IntJoukko {
         if (capacityIncrease < 0) {
             throw new IndexOutOfBoundsException("Virheellinen capacityIncrease");
         }
-        values = new int[initialCapacity];
+        elements = new int[initialCapacity];
         nextFreeIndex = 0;
         this.capacityIncrease = capacityIncrease;
     }
 
     public boolean lisaa(int luku) {
         if (nextFreeIndex == 0) {
-            values[0] = luku;
+            elements[0] = luku;
             nextFreeIndex++;
             return true;
         } else {
         }
         if (!kuuluu(luku)) {
-            values[nextFreeIndex] = luku;
+            elements[nextFreeIndex] = luku;
             nextFreeIndex++;
-            if (nextFreeIndex % values.length == 0) {
-                int[] taulukkoOld = values;
-                kopioiTaulukko(values, taulukkoOld);
-                values = new int[nextFreeIndex + capacityIncrease];
-                kopioiTaulukko(taulukkoOld, values);
+            if (nextFreeIndex % elements.length == 0) {
+                int[] taulukkoOld = elements;
+                kopioiTaulukko(elements, taulukkoOld);
+                elements = new int[nextFreeIndex + capacityIncrease];
+                kopioiTaulukko(taulukkoOld, elements);
             }
             return true;
         }
         return false;
     }
 
-    public boolean kuuluu(int luku) {
+    public boolean kuuluu(int element) {
         for (int i = 0; i < nextFreeIndex; i++) {
-            if (luku == values[i]) {
+            if (element == elements[i]) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean poista(int luku) {
-        int kohta = -1;
-        int apu;
+    private Optional<Integer> findIndex(int value) {
         for (int i = 0; i < nextFreeIndex; i++) {
-            if (luku == values[i]) {
-                kohta = i; //siis luku löytyy tuosta kohdasta :D
-                values[kohta] = 0;
-                break;
+            if (value == elements[i]) {
+                return Optional.of(i);
             }
         }
-        if (kohta != -1) {
-            for (int j = kohta; j < nextFreeIndex - 1; j++) {
-                apu = values[j];
-                values[j] = values[j + 1];
-                values[j + 1] = apu;
-            }
+        return Optional.empty();
+    }
+
+    public boolean poista(int element) {
+        var index = findIndex(element);
+        index.ifPresent(i -> {
+            // Move last element of the backing array into the removed index
+            elements[i] = elements[nextFreeIndex - 1];
             nextFreeIndex--;
-            return true;
-        }
-
-
-        return false;
+        });
+        return index.isPresent();
     }
 
     private void kopioiTaulukko(int[] vanha, int[] uusi) {
@@ -103,14 +98,14 @@ public class IntJoukko {
         if (nextFreeIndex == 0) {
             return "{}";
         } else if (nextFreeIndex == 1) {
-            return "{" + values[0] + "}";
+            return "{" + elements[0] + "}";
         } else {
             String tuotos = "{";
             for (int i = 0; i < nextFreeIndex - 1; i++) {
-                tuotos += values[i];
+                tuotos += elements[i];
                 tuotos += ", ";
             }
-            tuotos += values[nextFreeIndex - 1];
+            tuotos += elements[nextFreeIndex - 1];
             tuotos += "}";
             return tuotos;
         }
@@ -119,7 +114,7 @@ public class IntJoukko {
     public int[] toIntArray() {
         int[] taulu = new int[nextFreeIndex];
         for (int i = 0; i < taulu.length; i++) {
-            taulu[i] = values[i];
+            taulu[i] = elements[i];
         }
         return taulu;
     }
