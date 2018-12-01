@@ -3,23 +3,44 @@ package ohtu;
 public class TennisGame {
 
     static class Player {
-        private String name;
-        private int score = 0;
+        private final String name;
+        private int points = 0;
 
         public Player(String name){
             this.name = name;
         }
+    }
 
-        public String getName() {
-            return name;
+    private interface Show {
+        static String showAdvantage(Player p) {
+            return "Advantage " + p.name;
         }
 
-        public int getScore() {
-            return score;
+        static String showWin(Player p) {
+            return "Win for " + p.name;
         }
 
-        public void incrementScore() {
-            this.score++;
+        static String showPoints(Player p) {
+            switch (p.points) {
+                case 0:
+                    return "Love";
+                case 1:
+                    return "Fifteen";
+                case 2:
+                    return "Thirty";
+                case 3:
+                    return "Forty";
+                default:
+                    return "Deuce";
+            }
+        }
+
+        static String showScore(Player a, Player b) {
+            return a.points < 4 ? String.format("%s-%s", showPoints(a), showPoints(b)) : showPoints(a);
+        }
+
+        static String showTie(Player p) {
+            return String.format("%s-All", showPoints(p));
         }
     }
 
@@ -33,60 +54,53 @@ public class TennisGame {
 
     public void wonPoint(String playerName) {
         if (playerName.equals(player1.name)) {
-            player1.incrementScore();
+            player1.points++;
         } else {
-            player2.incrementScore();
+            player2.points++;
         }
     }
 
-
-
-    private String getScoreCall(int score) {
-        switch (score) {
-            case 0:
-                return "Love";
-            case 1:
-                return "Fifteen";
-            case 2:
-                return "Thirty";
-            case 3:
-                return "Forty";
-            default:
-                return "Deuce";
-        }
+    private int getScoreDifference() {
+        return Math.abs(player1.points - player2.points);
     }
 
-    private String getDrawState(int score) {
-        if (score >= 4) {
-            return getScoreCall(score);
+    private Player getLeadingPlayer() {
+        if (player1.points >= player2.points) {
+            return player1;
         } else {
-            return String.format("%s-All", getScoreCall(score));
+            return player2;
         }
     }
 
-    private String getAdvantageousState(int a, int b) {
-        if (a - b == 1) {
-            return "Advantage " + player1.getName();
-        } else if (a - b == -1) {
-            return "Advantage " + player2.getName();
-        } else if (a - b >= 2) {
-            return "Win for " + player1.getName();
-        } else {
-            return "Win for " + player2.getName();
-        }
+    private boolean isTied() {
+        return getScoreDifference() == 0;
     }
 
-    private String getDefaultState(int a, int b) {
-        return String.format("%s-%s", getScoreCall(a), getScoreCall(b));
+
+    /**
+     * Returns true if the game is beyond a deuce in which case there needs to be a two-point difference to win the game.
+     */
+    private boolean isAds() {
+        return player1.points >= 4 || player2.points >= 4;
+    }
+
+    private boolean isAdvantage() {
+        return isAds() && getScoreDifference() == 1;
+    }
+
+    private boolean isWon() {
+        return isAds() && getScoreDifference() >= 2;
     }
 
     public String getScore() {
-        if (player1.getScore() == player2.getScore()) {
-            return getDrawState(player1.getScore());
-        } else if (player1.getScore() >= 4 || player2.getScore() >= 4) {
-            return getAdvantageousState(player1.getScore(), player2.getScore());
+        if (isWon()) {
+            return Show.showWin(getLeadingPlayer());
+        } if (isAdvantage()) {
+            return Show.showAdvantage(getLeadingPlayer());
+        } else if (isTied()) {
+            return isAds() ? Show.showScore(player1, player2) : Show.showTie(player1);
         } else {
-            return getDefaultState(player1.getScore(), player2.getScore());
+            return Show.showScore(player1, player2);
         }
     }
 }
