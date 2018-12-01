@@ -1,13 +1,25 @@
 package ohtu;
 
+import java.util.Optional;
+import java.util.function.IntUnaryOperator;
+
 public class TennisGame {
 
     static class Player {
         private final String name;
-        private int points = 0;
+        private final int points;
 
-        public Player(String name){
+        public Player(String name) {
+            this(name, 0);
+        }
+
+        public Player(String name, int points) {
             this.name = name;
+            this.points = points;
+        }
+
+        public Player mapPoints(IntUnaryOperator f) {
+            return new Player(name, f.applyAsInt(points));
         }
     }
 
@@ -59,9 +71,9 @@ public class TennisGame {
 
     public void wonPoint(String playerName) {
         if (playerName.equals(player1.name)) {
-            player1.points++;
+            player1 = player1.mapPoints(n -> n + 1);
         } else {
-            player2.points++;
+            player2 = player2.mapPoints(n -> n + 1);
         }
     }
 
