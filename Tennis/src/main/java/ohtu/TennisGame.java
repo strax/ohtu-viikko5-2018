@@ -2,7 +2,7 @@ package ohtu;
 
 public class TennisGame {
 
-    protected class Player {
+    static class Player {
         private String name;
         private int score = 0;
 
@@ -38,6 +38,8 @@ public class TennisGame {
             player2.incrementScore();
         }
     }
+
+
 
     private String getScoreCall(int score) {
         switch (score) {
