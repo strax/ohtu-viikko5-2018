@@ -11,6 +11,7 @@ public class TennisGame {
         }
     }
 
+    // These are static in a companion interface to ensure that the show functions are pure
     private interface Show {
         static String showAdvantage(Player p) {
             return "Advantage " + p.name;
@@ -35,12 +36,16 @@ public class TennisGame {
             }
         }
 
+        static String showAdsTie(Player a, Player b) {
+            return showScore(a, b);
+        }
+
         static String showScore(Player a, Player b) {
             return a.points < 4 ? String.format("%s-%s", showPoints(a), showPoints(b)) : showPoints(a);
         }
 
-        static String showTie(Player p) {
-            return String.format("%s-All", showPoints(p));
+        static String showTie(Player a, Player b) {
+            return String.format("%s-All", showPoints(a));
         }
     }
 
@@ -76,7 +81,6 @@ public class TennisGame {
         return getScoreDifference() == 0;
     }
 
-
     /**
      * Returns true if the game is beyond a deuce in which case there needs to be a two-point difference to win the game.
      */
@@ -97,8 +101,10 @@ public class TennisGame {
             return Show.showWin(getLeadingPlayer());
         } if (isAdvantage()) {
             return Show.showAdvantage(getLeadingPlayer());
+        } else if (isTied() && isAds()) {
+            return Show.showAdsTie(player1, player2);
         } else if (isTied()) {
-            return isAds() ? Show.showScore(player1, player2) : Show.showTie(player1);
+            return Show.showTie(player1, player2);
         } else {
             return Show.showScore(player1, player2);
         }
