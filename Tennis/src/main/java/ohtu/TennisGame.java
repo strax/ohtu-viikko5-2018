@@ -1,22 +1,41 @@
 package ohtu;
 
 public class TennisGame {
-    
-    private int player1Score = 0;
-    private int player2Score = 0;
-    private String player1Name;
-    private String player2Name;
+
+    protected class Player {
+        private String name;
+        private int score = 0;
+
+        public Player(String name){
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public void incrementScore() {
+            this.score++;
+        }
+    }
+
+    private Player player1;
+    private Player player2;
 
     public TennisGame(String player1Name, String player2Name) {
-        this.player1Name = player1Name;
-        this.player2Name = player2Name;
+        this.player1 = new Player(player1Name);
+        this.player2 = new Player(player2Name);
     }
 
     public void wonPoint(String playerName) {
-        if (playerName.equals(player1Name)) {
-            player1Score++;
+        if (playerName.equals(player1.name)) {
+            player1.incrementScore();
         } else {
-            player2Score++;
+            player2.incrementScore();
         }
     }
 
@@ -45,13 +64,13 @@ public class TennisGame {
 
     private String getAdvantageousState(int a, int b) {
         if (a - b == 1) {
-            return "Advantage " + player1Name;
+            return "Advantage " + player1.getName();
         } else if (a - b == -1) {
-            return "Advantage " + player2Name;
+            return "Advantage " + player2.getName();
         } else if (a - b >= 2) {
-            return "Win for " + player1Name;
+            return "Win for " + player1.getName();
         } else {
-            return "Win for " + player2Name;
+            return "Win for " + player2.getName();
         }
     }
 
@@ -60,12 +79,12 @@ public class TennisGame {
     }
 
     public String getScore() {
-        if (player1Score == player2Score) {
-            return getDrawState(player1Score);
-        } else if (player1Score >= 4 || player2Score >= 4) {
-            return getAdvantageousState(player1Score, player2Score);
+        if (player1.getScore() == player2.getScore()) {
+            return getDrawState(player1.getScore());
+        } else if (player1.getScore() >= 4 || player2.getScore() >= 4) {
+            return getAdvantageousState(player1.getScore(), player2.getScore());
         } else {
-            return getDefaultState(player1Score, player2Score);
+            return getDefaultState(player1.getScore(), player2.getScore());
         }
     }
 }
