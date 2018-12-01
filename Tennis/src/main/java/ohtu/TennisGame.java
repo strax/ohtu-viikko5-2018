@@ -1,9 +1,11 @@
 package ohtu;
 
-import java.util.Optional;
 import java.util.function.IntUnaryOperator;
 
 public class TennisGame {
+    private static boolean isAds(int maxScore) {
+        return maxScore >= 4;
+    }
 
     static class Player {
         private final String name;
@@ -24,7 +26,7 @@ public class TennisGame {
     }
 
     // These are static in a companion interface to ensure that the show functions are pure
-    private interface Show {
+    public interface Show {
         static String showAdvantage(Player p) {
             return "Advantage " + p.name;
         }
@@ -44,20 +46,20 @@ public class TennisGame {
                 case 3:
                     return "Forty";
                 default:
-                    return "Deuce";
+                    return "Game";
             }
         }
 
-        static String showAdsTie(Player a, Player b) {
-            return showScore(a, b);
-        }
-
         static String showScore(Player a, Player b) {
-            return a.points < 4 ? String.format("%s-%s", showPoints(a), showPoints(b)) : showPoints(a);
+            return String.format("%s-%s", showPoints(a), showPoints(b));
         }
 
         static String showTie(Player a, Player b) {
-            return String.format("%s-All", showPoints(a));
+            if (isAds(Math.max(a.points, b.points))) {
+                return "Deuce";
+            } else {
+                return String.format("%s-All", showPoints(a));
+            }
         }
     }
 
@@ -95,9 +97,10 @@ public class TennisGame {
 
     /**
      * Returns true if the game is beyond a deuce in which case there needs to be a two-point difference to win the game.
+     * This is called "advantage scoring" or "ads".
      */
     private boolean isAds() {
-        return player1.points >= 4 || player2.points >= 4;
+        return TennisGame.isAds(getLeadingPlayer().points);
     }
 
     private boolean isAdvantage() {
@@ -113,8 +116,6 @@ public class TennisGame {
             return Show.showWin(getLeadingPlayer());
         } if (isAdvantage()) {
             return Show.showAdvantage(getLeadingPlayer());
-        } else if (isTied() && isAds()) {
-            return Show.showAdsTie(player1, player2);
         } else if (isTied()) {
             return Show.showTie(player1, player2);
         } else {
